@@ -21,15 +21,19 @@ namespace UserRateLimit.Controllers
         public UserRateLimitApi(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
-            Configuration = configuration;            
+            Configuration = configuration;
         }
 
 
-        public async Task<IActionResult> CheckUserLimit([FromQuery] RateLimitDto model)
+        public IActionResult CheckUserLimit([FromQuery] RateLimitDto model)
         {
             try
             {
+                HttpContext.Response.ContentType = "application/json";
+
                 //var IP = Request.HttpContext.Connection.RemoteIpAddress;
+                if (!ModelState.IsValid)
+                    return BadRequest(WarningResult(ModelState));
 
                 var result = _context.Tb_RateLimits.Where(d => d.UserIP == model.UserIP).OrderByDescending(d => d.LastLimit).FirstOrDefault();
 
@@ -38,6 +42,23 @@ namespace UserRateLimit.Controllers
                     if (result.LastLimit > DateTime.Now.AddMinutes(-double.Parse((Configuration["RateLimitDateTime"].ToString()))))
                         return BadRequest(ForbiddenResult("You are allowed to submit a request every ten minutes"));
                 }
+                return Ok(SuccessResult());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ErrorResult(ex.Message));
+            }
+
+        }
+
+        public async Task<IActionResult> SetUserInBlackList([FromQuery] RateLimitDto model)
+        {
+            try
+            {
+                HttpContext.Response.ContentType = "application/json";
+
+                if (!ModelState.IsValid)
+                    return BadRequest(WarningResult(ModelState));
 
                 var rateLimit = new Tb_RateLimit()
                 {
@@ -49,6 +70,7 @@ namespace UserRateLimit.Controllers
                 await _context.AddAsync(rateLimit);
                 await _context.SaveChangesAsync();
 
+
                 return Ok(SuccessResult());
             }
             catch (Exception ex)
@@ -56,6 +78,13 @@ namespace UserRateLimit.Controllers
                 return BadRequest(ErrorResult(ex.Message));
             }
 
+        }
+
+
+        ~UserRateLimitApi()
+        {
+            if (_context != null)
+                _context.Dispose();
         }
     }
 }
