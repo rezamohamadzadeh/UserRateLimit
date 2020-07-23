@@ -9,7 +9,10 @@ using Quartz.Spi;
 
 namespace UserRateLimit.Jobs
 {
-    public class QuartzHostedService:IHostedService
+    /// <summary>
+    /// manage QuartzHosted
+    /// </summary>
+    public class QuartzHostedService : IHostedService
     {
 
         private readonly ISchedulerFactory _schedulerFactory;

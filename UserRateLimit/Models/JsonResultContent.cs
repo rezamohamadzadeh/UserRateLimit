@@ -31,6 +31,10 @@ namespace UserRateLimit.Models
         UnAuthorized
 
     }
+
+    /// <summary>
+    /// Display enums Display in json response
+    /// </summary>
     public static class EnumExtention
     {
         public static string ToDisplay(this Enum value, DisplayProperty property = DisplayProperty.Name)

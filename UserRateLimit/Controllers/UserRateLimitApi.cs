@@ -24,7 +24,11 @@ namespace UserRateLimit.Controllers
             Configuration = configuration;
         }
 
-
+        /// <summary>
+        /// check user black list state in db by ip
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public IActionResult CheckUserLimit([FromQuery] RateLimitDto model)
         {
             try
@@ -50,6 +54,12 @@ namespace UserRateLimit.Controllers
             }
 
         }
+
+        /// <summary>
+        /// Set user by ip and id in Black list db
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
 
         public async Task<IActionResult> SetUserInBlackList([FromQuery] RateLimitDto model)
         {

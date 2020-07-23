@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace UserRateLimit.Models
 {
+    /// <summary>
+    /// Return Json Result
+    /// </summary>
     public class JsonActions : ControllerBase
     {
         private JsonResultContent jsonResult;

@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace UserRateLimit.Jobs
 {
+
+    /// <summary>
+    /// this job delete every 10 min expire user rate limite
+    /// </summary>
+
     [DisallowConcurrentExecution]
     public class RemoveUserExpireRateLimit : IJob
     {
